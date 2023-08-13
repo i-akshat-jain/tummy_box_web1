@@ -39,19 +39,12 @@
     </script>
 
     <!-- Firebase configuration script -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <!-- Other Firebase scripts if needed -->
 
     <script>
-        // Initialize Firebase
-        // Import the functions you need from the SDKs you need
-        import {
-            initializeApp
-        } from "firebase/app";
-        import {
-            getAnalytics
-        } from "firebase/analytics";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -68,8 +61,7 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        firebase.initializeApp(firebaseConfig);
     </script>
 
     <!-- Load the main Dart script -->

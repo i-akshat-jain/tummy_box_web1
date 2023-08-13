@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import './wrapper/wrapper.dart'; // Import the wrapper.dart file
 
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp().catchError((e) {
-  //   print('Error initializing Firebase: $e');
-  // });
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+     options: const FirebaseOptions (
+  apiKey: "AIzaSyCdzA02622-P24risizEwJt5m7wYTaYJXQ",
+  authDomain: "tummybox-f2238.firebaseapp.com",
+  projectId: "tummybox-f2238",
+  storageBucket: "tummybox-f2238.appspot.com",
+  messagingSenderId: "335574407035",
+  appId: "1:335574407035:web:914eb761c088204d140fde",
+  measurementId: "G-64CZXPK2NZ"
+    )
+  ).catchError((e) {
+    print('Error initializing Firebase: $e');
+  });
   runApp(MyApp());
 }
 
