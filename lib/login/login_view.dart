@@ -47,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => HomeView(logoutCallback: widget.loginCallback,)),
+            builder: (context) => HomeView(logoutCallback: widget.loginCallback)),
       );
     } else {
       // Show an error message or alert if credentials are incorrect

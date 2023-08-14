@@ -15,7 +15,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-    <base href="/">
+    <base href="$FLUTTER_BASE_HREF">
 
     <meta charset="UTF-8">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -29,27 +29,20 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
+</head>
+
+<body>
+    <!-- Firebase configuration script (Load this before the main Dart script) -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
 
     <title>tummy_box_admin_web</title>
     <link rel="manifest" href="manifest.json">
 
     <script>
         // The value below is injected by flutter build, do not touch.
-        var serviceWorkerVersion = "3368605047";
-    </script>
+        var serviceWorkerVersion = null;
 
-    <!-- Firebase configuration script -->
-    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <!-- Other Firebase scripts if needed -->
-
-    <script>
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyCdzA02622-P24risizEwJt5m7wYTaYJXQ",
             authDomain: "tummybox-f2238.firebaseapp.com",
@@ -58,9 +51,7 @@
             messagingSenderId: "335574407035",
             appId: "1:335574407035:web:914eb761c088204d140fde",
             measurementId: "G-64CZXPK2NZ"
-        };
-
-        // Initialize Firebase
+        }; // Initialize Firebase 
         firebase.initializeApp(firebaseConfig);
     </script>
 
@@ -69,9 +60,6 @@
 
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
-</head>
-
-<body>
     <script>
         window.addEventListener('load', function(ev) {
             // Download main.dart.js
