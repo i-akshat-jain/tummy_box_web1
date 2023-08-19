@@ -107,7 +107,7 @@ class _HomeViewState extends State<HomeView> {
                       userData: selectedUserData,
                       profilesData: profilesData,
                       showProfileDetails: showProfileDetails,
-                      setshowProfileDetails: (bool value, ) {
+                      setshowProfileDetails: (bool value,  Map<String, dynamic> profileData) {
                         setState(() {
                           selectedProfileData = profilesData[0];
                           showProfileDetails = value;
@@ -139,7 +139,7 @@ class UserDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
   final List<Map<String, dynamic>> profilesData;
   final bool showProfileDetails;
-  final Function(bool) setshowProfileDetails;
+  final Function setshowProfileDetails;
 
   UserDetailsScreen({
     required this.userData,
@@ -181,6 +181,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   setState(() {
                     selectedProfile = profile;
                   });
+                  widget.setshowProfileDetails(true, profile);
                 },
               );
             }).toList(),
@@ -188,6 +189,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
           if (selectedProfile != null)
             ProfileScreen(profileData: selectedProfile!),
+            
         ],
       ),
     );
