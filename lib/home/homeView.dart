@@ -107,7 +107,7 @@ class _HomeViewState extends State<HomeView> {
                       userData: selectedUserData,
                       profilesData: profilesData,
                       showProfileDetails: showProfileDetails,
-                      setshowProfileDetails: (bool value,  Map<String, dynamic> profileData) {
+                      setshowProfileDetails: (bool value,  profileData) {
                         setState(() {
                           selectedProfileData = profilesData[0];
                           showProfileDetails = value;
@@ -189,18 +189,22 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
           if (selectedProfile != null)
             ProfileScreen(profileData: selectedProfile!),
-            
         ],
       ),
     );
   }
 }
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profileData;
 
   ProfileScreen({required this.profileData});
 
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -208,9 +212,9 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Name: ${profileData['name']}'),
-          Text('Date of Birth: ${profileData['dob']}'),
-          Text('Gender: ${profileData['gender']}'),
+          Text('Name: ${widget.profileData['name']}'),
+          Text('Date of Birth: ${widget.profileData['dob']}'),
+          Text('Gender: ${widget.profileData['gender']}'),
           // Display other profile details
         ],
       ),
