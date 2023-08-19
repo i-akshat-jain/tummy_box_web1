@@ -1,5 +1,13 @@
+import 'dart:html';
+import '../users/userDetails.dart';
+import '../profiles/userProfiles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class HomeView extends StatefulWidget {
   final Function logoutCallback;
@@ -89,6 +97,7 @@ class _HomeViewState extends State<HomeView> {
                                 setState(() {
                                   selectedUserData = userSnapshot.data()
                                       as Map<String, dynamic>;
+                                  
                                   profilesData = profiles;
                                   showUserDetails = true;
                                   showProfileDetails = false;
@@ -107,6 +116,7 @@ class _HomeViewState extends State<HomeView> {
                         height: MediaQuery.of(context).size.height * 0.92,
                         width: double.infinity,
                         child: UserDetailsScreen(
+                          referenceId: userReferenceId,
                           userData: selectedUserData,
                           profilesData: profilesData,
                           showProfileDetails: showProfileDetails,
@@ -141,17 +151,22 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
+
+
+
 class UserDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
   final List<Map<String, dynamic>> profilesData;
   final bool showProfileDetails;
   final Function setshowProfileDetails;
+  final String UserReferenceId;
 
   UserDetailsScreen({
     required this.userData,
     required this.profilesData,
     required this.showProfileDetails,
     required this.setshowProfileDetails,
+    required this.UserReferenceId,
   });
 
   @override
@@ -160,6 +175,33 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   Map<String, dynamic>? selectedProfile;
+  Map<String, dynamic> selectedUserData = {};
+  
+  Future updateUserDetails(String newName) async {
+    // Update the user's name in Firebase Firestore
+    try {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc() // Replace with the user's document ID
+          .update({'display_name': newName});
+
+      // Refresh the user data or perform any other necessary actions
+      // Fetch updated user data from Firebase
+      // setState or update your user data in the widget
+      DocumentSnapshot updatedUserSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(widget.userData['userId']) // Replace with the user's document ID
+          .get();
+
+      // Update the user data in the widget's state
+      setState(() {
+        selectedUserData = updatedUserSnapshot.data() as Map<String, dynamic>;
+      });
+
+    } catch (error) {
+      print('Error updating user details: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +220,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle edit button press
-                    // You can navigate to an edit screen or show a dialog
+                    showDialog(
+                      context: context,
+                      builder: (context) => EditUserDialog(
+                        initialName: widget.userData['display_name'],
+                        onSave: (newName) {
+                          updateUserDetails(newName);
+                        },
+                      ),
+                    );
                   },
                   child: Text('Edit'),
                 ),
@@ -215,6 +264,61 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     );
   }
 }
+
+class EditUserDialog extends StatefulWidget {
+  final String initialName;
+  final Function(String) onSave;
+
+  EditUserDialog({required this.initialName, required this.onSave});
+
+  @override
+  _EditUserDialogState createState() => _EditUserDialogState();
+}
+
+class _EditUserDialogState extends State<EditUserDialog> {
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Edit User Details'),
+      content: TextField(
+        controller: _nameController,
+        decoration: InputDecoration(labelText: 'Name'),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // Close the dialog
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            String newName = _nameController.text;
+            widget.onSave(newName); // Call the onSave function
+            Navigator.pop(context); // Close the dialog
+          },
+          child: Text('Save'),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+}
+
+// Add the rest of your code here...
 
 class ProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profileData;
