@@ -116,7 +116,8 @@ class _HomeViewState extends State<HomeView> {
                         height: MediaQuery.of(context).size.height * 0.92,
                         width: double.infinity,
                         child: UserDetailsScreen(
-                          referenceId: userReferenceId,
+                          //get the userReferenceId from the selected user
+                          userReferenceId: selectedUserData['userId'] ,
                           userData: selectedUserData,
                           profilesData: profilesData,
                           showProfileDetails: showProfileDetails,
@@ -159,14 +160,14 @@ class UserDetailsScreen extends StatefulWidget {
   final List<Map<String, dynamic>> profilesData;
   final bool showProfileDetails;
   final Function setshowProfileDetails;
-  final String UserReferenceId;
+  final String userReferenceId;
 
   UserDetailsScreen({
     required this.userData,
     required this.profilesData,
     required this.showProfileDetails,
     required this.setshowProfileDetails,
-    required this.UserReferenceId,
+    required this.userReferenceId,
   });
 
   @override
