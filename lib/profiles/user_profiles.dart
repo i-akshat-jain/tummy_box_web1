@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class ProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profileData;
 
