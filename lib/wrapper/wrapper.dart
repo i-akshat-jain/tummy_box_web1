@@ -35,10 +35,9 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     // if (_isLoggedIn) {
-      
       return HomeView(logoutCallback: _logout,);
     // } else {
-  //     return LoginPage(loginCallback: _login);
-  //   }
+    //   return LoginPage(loginCallback: _login);
+    // }
   }
 }

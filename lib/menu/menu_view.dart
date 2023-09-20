@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tummy_box_admin_web/users/user_details.dart';
-import 'package:tummy_box_admin_web/menu/meals/breakfast.dart';
-import 'package:tummy_box_admin_web/profiles/user_profiles.dart';
+import 'package:tummy_box_admin_web/menu/meals/menu_item_list.dart';
 
 class MenuItems extends StatefulWidget {
   const MenuItems({super.key});
@@ -47,7 +45,7 @@ class _MenuItemsState extends State<MenuItems> {
             );
           }
 
-          // final userDocs = snapshot.data!.docs;
+          // final menuDocs = snapshot.data!.docs;
 
           return Container(
             child: Padding(
@@ -64,7 +62,7 @@ class _MenuItemsState extends State<MenuItems> {
                           itemCount: collectionNames.length,
                           itemBuilder: (context, index) {
                             final displayName = collectionNames[index];
-                            // final userReferenceId = userDocs[index].id;
+                            // final allItemsRefID = menuDocs[index].id;
                             return ListTile(
                               title: Text(displayName),
                               onTap: () async {
@@ -115,6 +113,7 @@ class _MenuItemsState extends State<MenuItems> {
                         width: double.infinity,
                         child: MenuItemsList(
                           itemsData: itemsData,
+                          menuUserId: allItemsRefID
                         ),
                       ),
                     ),
