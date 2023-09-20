@@ -132,6 +132,8 @@ appBar: AppBar(
                         color: Colors.green,
                         child: ProfileScreen(
                           profileData: selectedProfileData,
+                          userId: selectedUserData["uid"],
+                          
                         ),
                       ),
                     ),

@@ -1,26 +1,33 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tummy_box_admin_web/users/user_details.dart';
+import 'package:tummy_box_admin_web/menu/meals/breakfast.dart';
+import 'package:tummy_box_admin_web/profiles/user_profiles.dart';
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key});
+class MenuItems extends StatefulWidget {
+  const MenuItems({super.key});
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<MenuItems> createState() => _MenuItemsState();
 }
 
-class _MenuPageState extends State<MenuPage> {
-  List<String> subcollectionNames = ["Breakfast", "Lunch", "Dinner", "Snacks"];
-  bool showMealData = false;
-
+class _MenuItemsState extends State<MenuItems> {
+  List<String> collectionNames = ["Breakfast", "Snacks", "Lunch", "Dinner"];
+  bool showMenuItems = false;
+  bool showItemDetails = false; // Add this line
+  Map<String, dynamic> selectedMenuTypeData = {};
+  Map<String, dynamic> selectedItemData = {};
+  List<Map<String, dynamic>> itemsData = [];
+  String allItemsRefID = "2x459ubWpiFcLQtRyp6W";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menu Page'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back), // Add a back arrow icon
           onPressed: () {
+            // Navigate back when the back button is pressed
             Navigator.of(context).pop();
           },
         ),
@@ -40,7 +47,8 @@ class _MenuPageState extends State<MenuPage> {
             );
           }
 
-          final menuDocs = snapshot.data!.docs;
+          // final userDocs = snapshot.data!.docs;
+
           return Container(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -53,14 +61,44 @@ class _MenuPageState extends State<MenuPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: ListView.builder(
-                          itemCount: subcollectionNames.length,
+                          itemCount: collectionNames.length,
                           itemBuilder: (context, index) {
-                            final subcollectionName = subcollectionNames[index];
+                            final displayName = collectionNames[index];
+                            // final userReferenceId = userDocs[index].id;
                             return ListTile(
-                              title: Text(subcollectionName),
-                              onTap: () {
+                              title: Text(displayName),
+                              onTap: () async {
+                                DocumentSnapshot menuSnapshot =
+                                    await FirebaseFirestore.instance
+                                        .collection('Menu')
+                                        .doc(allItemsRefID)
+                                        .get();
+
+                                String selectedMenuType = displayName;
+
+                                DocumentReference menuTypeRef =
+                                    menuSnapshot.reference;
+                                CollectionReference menuTypeCollection =
+                                    menuTypeRef.collection(selectedMenuType);
+
+                                QuerySnapshot menuTypeSnapshot =
+                                    await menuTypeCollection.get();
+
+                                List<Map<String, dynamic>> menu = [];
+
+                                menuTypeSnapshot.docs.forEach((itemDoc) {
+                                  Map<String, dynamic> profileData =
+                                      itemDoc.data() as Map<String, dynamic>;
+                                  menu.add(profileData);
+                                });
+
                                 setState(() {
-                                  showMealData = true;
+                                  selectedMenuTypeData = menuSnapshot.data()
+                                      as Map<String, dynamic>;
+                                  itemsData = menu;
+                                  showMenuItems = true;
+                                  showItemDetails = false;
+                                  print(menu);
                                 });
                               },
                             );
@@ -69,66 +107,17 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                   ),
-                  if (showMealData)
+                  if (showMenuItems)
                     Expanded(
                       child: Container(
                         color: Colors.yellow,
+                        height: MediaQuery.of(context).size.height * 0.92,
                         width: double.infinity,
-                        child: ListView.builder(
-                          itemCount: subcollectionNames.length,
-                          itemBuilder: (context, index) {
-                            final menuReferenceId = menuDocs[index].id;
-                            final subcollectionName = subcollectionNames[index];
-                            return StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('Menu')
-                                  .doc(menuReferenceId)
-                                  .collection(subcollectionName)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
-                                }
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-
-                                final subcollectionDocs = snapshot.data!.docs;
-
-                                // Create a list of ListTiles for the subcollection data
-                                List<Widget> subcollectionListTiles =
-                                    subcollectionDocs.map((subcollectionItem) {
-                                  if (index < subcollectionDocs.length) {
-                                    final subcollectionData = subcollectionItem
-                                        .data() as Map<String, dynamic>;
-                                    return ListTile(
-                                      title: Text(subcollectionData['item1']),
-                                      subtitle:
-                                          Text(subcollectionData['item2']),
-                                      // You can display other subcollection data here
-                                    );
-                                  } else {
-                                    return ListTile(
-                                      title: Text("No Data"),
-                                      subtitle: Text("No Data"),
-                                      // You can display other subcollection data here
-                                    );
-                                  }
-                                }).toList();
-
-                                return ListView(
-                                  children: subcollectionListTiles,
-                                );
-                              },
-                            );
-                          },
+                        child: MenuItemsList(
+                          itemsData: itemsData,
                         ),
                       ),
-                    )
+                    ),
                 ],
               ),
             ),

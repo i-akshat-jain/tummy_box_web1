@@ -1,37 +1,36 @@
 import 'package:flutter/material.dart';
 
-class EditUserDialog extends StatefulWidget {
+class EditProfileDialog extends StatefulWidget {
   final String initialName;
-  final String initialEmail;
-  final String initialPhoneNumber;
+  final String initialphoto_url;
+  final String initialGender;
   final Function(String, String, String)
       onSave; // Add email and phone number parameters
 
-  EditUserDialog({
+  EditProfileDialog({
     required this.initialName,
-    required this.initialEmail,
-    required this.initialPhoneNumber,
+    required this.initialphoto_url,
+    required this.initialGender,
     required this.onSave,
   });
 
   @override
-  _EditUserDialogState createState() => _EditUserDialogState();
+  _EditProfileDialogState createState() => _EditProfileDialogState();
 }
 
-class _EditUserDialogState extends State<EditUserDialog> {
+class _EditProfileDialogState extends State<EditProfileDialog> {
   late TextEditingController _nameController;
-  late TextEditingController _emailController; // Add email controller
-  late TextEditingController
-      _phoneNumberController; // Add phone number controller
+  late TextEditingController _photo_urlController; // Add email controller
+  late TextEditingController _genderController; // Add phone number controller
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.initialName);
-    _emailController = TextEditingController(
-        text: widget.initialEmail); // Initialize email controller
-    _phoneNumberController = TextEditingController(
-        text: widget.initialPhoneNumber); // Initialize phone number controller
+    _photo_urlController = TextEditingController(
+        text: widget.initialphoto_url); // Initialize email controller
+    _genderController = TextEditingController(
+        text: widget.initialGender); // Initialize phone number controller
   }
 
   @override
@@ -46,11 +45,11 @@ class _EditUserDialogState extends State<EditUserDialog> {
             decoration: InputDecoration(labelText: 'Name'),
           ),
           TextField(
-            controller: _emailController,
+            controller: _photo_urlController,
             decoration: InputDecoration(labelText: 'Email'), // Add email field
           ),
           TextField(
-            controller: _phoneNumberController,
+            controller: _genderController,
             decoration: InputDecoration(
                 labelText: 'Phone Number'), // Add phone number field
           ),
@@ -66,9 +65,9 @@ class _EditUserDialogState extends State<EditUserDialog> {
         ElevatedButton(
           onPressed: () {
             String newName = _nameController.text;
-            String newEmail = _emailController.text; // Get email input
+            String newEmail = _photo_urlController.text; // Get email input
             String newPhoneNumber =
-                _phoneNumberController.text; // Get phone number input
+                _genderController.text; // Get phone number input
             widget.onSave(newName, newEmail,
                 newPhoneNumber); // Call the onSave function with all inputs
             Navigator.pop(context); // Close the dialog
@@ -82,8 +81,8 @@ class _EditUserDialogState extends State<EditUserDialog> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose(); // Dispose of email controller
-    _phoneNumberController.dispose(); // Dispose of phone number controller
+    _photo_urlController.dispose(); // Dispose of email controller
+    _genderController.dispose(); // Dispose of phone number controller
     super.dispose();
   }
 }

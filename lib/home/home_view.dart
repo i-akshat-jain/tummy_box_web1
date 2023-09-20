@@ -55,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
                 Column(
                   children: [
                     BoxContainers(
-                      nextPage: MenuPage(),
+                      nextPage: MenuItems(),
                       pageName: "Menu Details",
                     ),
                     BoxContainers(

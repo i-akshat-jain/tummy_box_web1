@@ -25,13 +25,18 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   Map<String, dynamic>? selectedProfile;
   Map<String, dynamic> selectedUserData = {};
 
-  Future updateUserDetails(String newName) async {
+  Future updateUserDetails(
+      String newName, String newEmail, String newPhoneNumber) async {
     // Update the user's name in Firebase Firestore
     try {
       await FirebaseFirestore.instance
           .collection('Users')
           .doc(widget.userData['uid']) // Replace with the user's document ID
-          .update({'display_name': newName});
+          .update({
+        'display_name': newName,
+        'email': newEmail,
+        'phone_number': newPhoneNumber
+      });
 
       // Refresh the user data or perform any other necessary actions
       // Fetch updated user data from Firebase
@@ -99,8 +104,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             context: context,
                             builder: (context) => EditUserDialog(
                               initialName: updatedUserData['display_name'],
-                              onSave: (newName) {
-                                updateUserDetails(newName);
+                              initialEmail: updatedUserData['email'],
+                              initialPhoneNumber: updatedUserData['phone_number'],
+                              onSave: (newName, newEmail, newPhoneNumber) {
+                                updateUserDetails(newName, newEmail, newPhoneNumber);
                               },
                             ),
                           );
@@ -112,7 +119,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   Text('Name: ${updatedUserData['display_name']}'),
                   Text('Email: ${updatedUserData['email']}'),
                   Text('Phone Number: ${updatedUserData['phone_number']}'),
-                  // Display other user details as needed
 
                   SizedBox(height: 20),
 
